@@ -1,0 +1,219 @@
+{% extends 'bookings/base.html' %} {% block title %}Ticket - {{
+ticket.ticket_number }}{% endblock %} {% block content %}
+<div class="max-w-2xl mx-auto">
+  <!-- Parking Ticket -->
+  <div
+    class="bg-white rounded-2xl shadow-2xl overflow-hidden border-4 border-green-500"
+  >
+    <!-- Header -->
+    <div
+      class="bg-gradient-to-r from-green-600 to-emerald-600 p-6 text-white text-center"
+    >
+      <div class="text-5xl mb-2">🎫</div>
+      <h1 class="text-3xl font-bold">Parking Ticket</h1>
+      <p class="text-green-100 mt-1">PARKING TICKET</p>
+    </div>
+
+    <!-- QR Code / Barcode Section -->
+    <div
+      class="bg-gray-50 p-8 text-center border-b-4 border-dashed border-gray-300"
+    >
+      <div class="bg-white p-6 rounded-lg inline-block shadow-md">
+        <!-- Simulated QR Code -->
+        <div
+          class="w-48 h-48 bg-gradient-to-br from-gray-800 to-gray-600 rounded-lg flex items-center justify-center text-white font-mono text-xs p-4"
+        >
+          <div class="text-center">
+            <div class="text-4xl mb-2">▪️▪️▪️</div>
+            <div class="text-4xl mb-2">▪️ ▪️▪️</div>
+            <div class="text-4xl mb-2">▪️▪️ ▪️</div>
+            <div class="text-xs">QR CODE</div>
+            <div class="text-xs mt-2">{{ ticket.qr_code }}</div>
+          </div>
+        </div>
+      </div>
+      <p class="text-gray-600 mt-4 font-semibold">
+        Scan QR Code to enter/exit the parking lot
+      </p>
+    </div>
+
+    <!-- Ticket Information -->
+    <div class="p-8">
+      <!-- Ticket Number -->
+      <div class="text-center mb-6">
+        <p class="text-sm text-gray-500 mb-1">Ticket Number</p>
+        <p class="text-3xl font-bold text-gray-800 font-mono tracking-wider">
+          {{ ticket.ticket_number }}
+        </p>
+      </div>
+
+      <div class="border-t-2 border-dashed border-gray-300 pt-6 space-y-4">
+        <!-- Booking ID -->
+        <div class="flex items-center bg-blue-50 p-4 rounded-lg">
+          <span class="text-3xl mr-4">🆔</span>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500">Booking ID</p>
+            <p class="text-lg font-bold text-gray-800 font-mono">
+              {{ booking.booking_id }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Parking Spot -->
+        <div class="flex items-center bg-green-50 p-4 rounded-lg">
+          <span class="text-3xl mr-4">🅿️</span>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500">Parking Spot</p>
+            <p class="text-2xl font-bold text-green-700">
+              {{ booking.parking_spot }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Car Information -->
+        <div class="flex items-center bg-purple-50 p-4 rounded-lg">
+          <span class="text-3xl mr-4">🚗</span>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500">Car License</p>
+            <p class="text-lg font-bold text-gray-800">
+              {{ booking.car_license }}
+            </p>
+            <p class="text-sm text-gray-600">{{ booking.car_model }}</p>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <div class="flex items-center bg-orange-50 p-4 rounded-lg">
+          <span class="text-3xl mr-4">📅</span>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500">Date</p>
+            <p class="text-lg font-bold text-gray-800">
+              {{ booking.booking_date }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Time -->
+        <div class="flex items-center bg-yellow-50 p-4 rounded-lg">
+          <span class="text-3xl mr-4">⏰</span>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500">Time</p>
+            <p class="text-lg font-bold text-gray-800">
+              {{ booking.start_time }} - {{ booking.end_time }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Booker -->
+        <div class="flex items-center bg-indigo-50 p-4 rounded-lg">
+          <span class="text-3xl mr-4">👤</span>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500">Booker</p>
+            <p class="text-lg font-bold text-gray-800">
+              {{ booking.user.username }}
+            </p>
+            <p class="text-sm text-gray-600">📱 {{ booking.phone_number }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="mt-6 pt-6 border-t-2 border-gray-200">
+        <div class="text-center space-y-2">
+          <p class="text-sm text-gray-600">
+            <strong>Issued At:</strong> {{ ticket.issued_at|date:"d/m/Y H:i" }}
+            น.
+          </p>
+          {% if booking.approved_by %}
+          <p class="text-sm text-gray-600">
+            <strong>Approved By:</strong> {{ booking.approved_by.username }}
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="bg-gray-100 p-4 text-center border-t-4 border-dashed border-gray-300"
+    >
+      <p class="text-xs text-gray-600">
+        Please keep this ticket for entry and exit
+      </p>
+      <p class="text-xs text-gray-500 mt-1">
+        Please keep this ticket for entry and exit
+      </p>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="mt-8 grid grid-cols-2 gap-4">
+    <button
+      onclick="window.print()"
+      class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center"
+    >
+      <span class="mr-2">🖨️</span> Print Ticket
+    </button>
+    <a
+      href="{% url 'my_bookings' %}"
+      class="bg-gray-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-700 transition-colors duration-200 flex items-center justify-center"
+    >
+      <span class="mr-2">◀️</span> Back
+    </a>
+  </div>
+
+  <!-- Instructions -->
+  <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg">
+    <h3 class="font-bold text-blue-900 mb-3 text-lg">📌 Usage Instructions</h3>
+    <ul class="space-y-2 text-blue-800">
+      <li class="flex items-start">
+        <span class="mr-2">✅</span>
+        <span
+          >Show QR Code or ticket number when entering and exiting the parking
+          lot</span
+        >
+      </li>
+      <li class="flex items-start">
+        <span class="mr-2">✅</span>
+        <span
+          >Park only in the designated spot:
+          <strong class="text-green-600"
+            >{{ booking.parking_spot }}</strong
+          ></span
+        >
+      </li>
+      <li class="flex items-start">
+        <span class="mr-2">✅</span>
+        <span>Follow the time specified on the ticket</span>
+      </li>
+      <li class="flex items-start">
+        <span class="mr-2">⚠️</span>
+        <span
+          >This ticket is non-transferable and cannot be used by others</span
+        >
+      </li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    .max-w-2xl,
+    .max-w-2xl * {
+      visibility: visible;
+    }
+    .max-w-2xl {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    button,
+    .mt-8 {
+      display: none !important;
+    }
+  }
+</style>
+{% endblock %}

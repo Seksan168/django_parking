@@ -1,0 +1,120 @@
+{% extends 'bookings/base.html' %}
+
+{% block title %}my_cars{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">🚗 My Cars</h1>
+        <p class="text-gray-600">Manage your vehicles</p>
+    </div>
+    <a href="{% url 'add_car' %}" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg">
+        ➕ Add New Car
+    </a>
+</div>
+
+{% if cars %}
+    <div class="grid gap-6">
+        {% for car in cars %}
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
+                <div class="flex">
+                    <!-- Status Bar -->
+                    <div class="w-2 {% if car.is_default %}bg-yellow-500{% else %}bg-gray-300{% endif %}"></div>
+                    
+                    <!-- Content -->
+                    <div class="flex-1 p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <h3 class="text-2xl font-bold text-gray-800">{{ car.car_license }}</h3>
+                                    {% if car.is_default %}
+                                        <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full">
+                                            ⭐ Default Car
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <p class="text-gray-600 text-lg">{{ car.car_model }}</p>
+                                {% if car.car_color %}
+                                    <p class="text-gray-500 text-sm mt-1">🎨 สี: {{ car.car_color }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-gray-500 mb-4">
+                            Added on: {{ car.created_at|date:"d/m/Y H:i" }}
+                            {% if car.updated_at != car.created_at %}
+                                | Last edited: {{ car.updated_at|date:"d/m/Y H:i" }}
+                            {% endif %}
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex gap-2">
+                            <a href="{% url 'edit_car' car.id %}" 
+                               class="flex-1 text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                                ✏️ Edit
+                            </a>
+                            
+                            {% if not car.is_default %}
+                                <a href="{% url 'set_default_car' car.id %}" 
+                                   class="flex-1 text-center bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors duration-200 font-medium"
+                                   onclick="return confirm('Set {{ car.car_license }} as the default car?')">
+                                    ⭐ Set as Default Car
+                                </a>
+                            {% endif %}
+                            
+                            <a href="{% url 'delete_car' car.id %}" 
+                               class="flex-1 text-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
+                               onclick="return confirm('Are you sure you want to delete the car {{ car.car_license }}?')">
+                                🗑️ Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Statistics -->
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+            <div class="text-3xl mb-2">🚗</div>
+            <p class="text-2xl font-bold text-gray-800">{{ cars.count }}</p>
+            <p class="text-sm text-gray-600">รถทั้งหมด</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+            <div class="text-3xl mb-2">⭐</div>
+            <p class="text-2xl font-bold text-yellow-600">1</p>
+            <p class="text-sm text-gray-600">รถหลัก</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+            <div class="text-3xl mb-2">📝</div>
+            <p class="text-2xl font-bold text-green-600">{{ cars.count|add:"-1"|default:"0" }}</p>
+            <p class="text-sm text-gray-600">รถสำรอง</p>
+        </div>
+    </div>
+{% else %}
+    <!-- ไม่มีรถ -->
+    <div class="bg-white rounded-lg shadow-lg p-12 text-center">
+        <div class="text-6xl mb-4">🚗</div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">ยังไม่มีรถ</h2>
+        <p class="text-gray-600 mb-6">เพิ่มรถของคุณเพื่อจองที่จอดได้ง่ายขึ้น!</p>
+        <a href="{% url 'add_car' %}" 
+           class="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-full font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105">
+            ➕ เพิ่มรถคันแรก
+        </a>
+    </div>
+{% endif %}
+
+<!-- คำแนะนำ -->
+<div class="mt-8 bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg">
+    <h3 class="font-bold text-blue-900 mb-2 text-lg">💡 คำแนะนำ</h3>
+    <ul class="list-disc list-inside space-y-2 text-blue-800">
+        <li><strong>รถหลัก:</strong> จะถูกเลือกอัตโนมัติเมื่อจองที่จอด</li>
+        <li><strong>เพิ่มรถได้หลายคัน:</strong> สะดวกสำหรับครอบครัวที่มีรถหลายคัน</li>
+        <li><strong>แก้ไขได้ทุกเมื่อ:</strong> สามารถแก้ไขข้อมูลรถได้ตลอดเวลา</li>
+        <li><strong>ลบได้:</strong> ลบได้ถ้าไม่มีการจองที่ใช้รถคันนั้นอยู่</li>
+    </ul>
+</div>
+{% endblock %}

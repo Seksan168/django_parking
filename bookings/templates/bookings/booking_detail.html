@@ -1,0 +1,180 @@
+{% extends 'bookings/base.html' %}
+
+{% block title %}Booking Details - {{ booking.booking_id }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold mb-1">📄 Booking Details</h1>
+                    <p class="text-indigo-100">Booking ID: {{ booking.booking_id }}</p>
+                </div>
+                <div>
+                    <span class="inline-block px-4 py-2 rounded-full text-sm font-bold
+                        {% if booking.status == 'APPROVED' %}bg-green-500
+                        {% elif booking.status == 'WAITING' %}bg-yellow-500
+                        {% elif booking.status == 'REJECTED' %}bg-red-500
+                        {% else %}bg-gray-500{% endif %}">
+                        {% if booking.status == 'APPROVED' %}✅ Approved
+                        {% elif booking.status == 'WAITING' %}⏳ Waiting Approval
+                        {% elif booking.status == 'REJECTED' %}❌ Rejected
+                        {% else %}⚫ Canceled{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-8 space-y-6">
+            <!-- Car Information -->
+            <div class="border-l-4 border-blue-500 pl-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="text-3xl mr-2">🚗</span> Car Information
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-500 mb-1">Car License</p>
+                        <p class="text-xl font-bold text-gray-800">{{ booking.car_license }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-500 mb-1">Make/Model</p>
+                        <p class="text-xl font-bold text-gray-800">{{ booking.car_model }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="border-l-4 border-green-500 pl-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="text-3xl mr-2">📱</span> Contact Information
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-500 mb-1">User</p>
+                        <p class="text-xl font-bold text-gray-800">{{ booking.user.username }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-500 mb-1">Phone Number</p>
+                        <p class="text-xl font-bold text-gray-800">{{ booking.phone_number }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date, Time, and Parking Spot -->
+            <div class="border-l-4 border-purple-500 pl-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="text-3xl mr-2">📅</span> Date, Time, and Parking Spot
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-500 mb-1">Booking Date</p>
+                        <p class="text-lg font-bold text-gray-800">{{ booking.booking_date }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-500 mb-1">Time</p>
+                        <p class="text-lg font-bold text-gray-800">{{ booking.start_time }} - {{ booking.end_time }}</p>
+                    </div>
+                    {% if booking.parking_spot %}
+                        <div class="bg-green-50 p-4 rounded-lg border-2 border-green-500">
+                            <p class="text-sm text-gray-500 mb-1">Parking Spot   </p>
+                            <p class="text-lg font-bold text-green-700">{{ booking.parking_spot }}</p>
+                        </div>
+                    {% else %}
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-500 mb-1">Parking Spot</p>
+                            <p class="text-lg font-bold text-gray-400">Not Assigned</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Notes -->
+            {% if booking.note %}
+                <div class="border-l-4 border-yellow-500 pl-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="text-3xl mr-2">📝</span> Notes
+                    </h2>
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <p class="text-gray-700">{{ booking.note }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- System Information -->
+            <div class="border-l-4 border-gray-500 pl-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="text-3xl mr-2">ℹ️</span> System Information
+                </h2>
+                <div class="space-y-2 text-sm text-gray-600">
+                    <p><strong>Created At:</strong> {{ booking.created_at|date:"d/m/Y H:i" }} น.</p>
+                    <p><strong>Last Updated:</strong> {{ booking.updated_at|date:"d/m/Y H:i" }} น.</p>
+                    {% if booking.approved_by %}
+                        <p><strong>Approved By:</strong> {{ booking.approved_by.username }}</p>
+                        <p><strong>Approved At:</strong> {{ booking.approved_at|date:"d/m/Y H:i" }} น.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Ticket (if any) -->
+            {% if ticket %}
+                <div class="bg-green-50 border-2 border-green-500 rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-green-800 mb-1">🎫 Parking Ticket Ready!</h3>
+                            <p class="text-green-600">Ticket Number: <span class="font-mono font-bold">{{ ticket.ticket_number }}</span></p>
+                        </div>
+                        <a href="{% url 'view_ticket' booking.booking_id %}" 
+                           class="bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 transition-colors duration-200">
+                            View Ticket →
+                        </a>
+                    </div>
+                </div>
+            {% elif booking.status == 'APPROVED' %}
+                <div class="bg-yellow-50 border-2 border-yellow-500 rounded-lg p-6 text-center">
+                    <div class="text-4xl mb-2">⏳</div>
+                    <p class="text-yellow-800 font-semibold">Ticket is being processed...</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Actions -->
+        <div class="bg-gray-50 px-8 py-6 border-t">
+            <div class="flex space-x-4">
+                <a href="{% url 'my_bookings' %}" 
+                   class="flex-1 bg-gray-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-700 transition-colors duration-200 text-center">
+                    ◀️ back to My Bookings
+                </a>
+                {% if booking.status == 'APPROVED' and ticket %}
+                    <a href="{% url 'view_ticket' booking.booking_id %}" 
+                       class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 transition-colors duration-200 text-center">
+                        🎫 View Parking Ticket
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Statuses -->
+    <div class="mt-6">
+        {% if booking.status == 'WAITING' %}
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-lg">
+                <h3 class="font-bold text-yellow-900 mb-2 text-lg">⏳ Waiting for Approval</h3>
+                <p class="text-yellow-800">Your booking is awaiting approval from the staff. Please wait...</p>
+            </div>
+        {% elif booking.status == 'REJECTED' %}
+            <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
+                <h3 class="font-bold text-red-900 mb-2 text-lg">❌ Booking Rejected</h3>
+                <p class="text-red-800">Sorry, your booking was not approved. For more information, please contact the staff.</p>
+            </div>
+        {% elif booking.status == 'APPROVED' %}
+            <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
+                <h3 class="font-bold text-green-900 mb-2 text-lg">✅ Booking Approved</h3>
+                <p class="text-green-800">Congratulations! Your booking has been approved. You can view your parking ticket above.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
