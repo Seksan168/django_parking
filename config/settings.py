@@ -33,7 +33,8 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # Allow all hosts for now (simpler when testing). Later you can restrict.
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['.railway.app']
+
 
 # ============================================================
 # Application definition
