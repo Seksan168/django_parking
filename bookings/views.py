@@ -4,11 +4,15 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.utils import timezone
 from django.http import HttpResponse
+
 from .models import Booking, ParkingSpot, Ticket, UserCar
 from .forms import BookingForm
 from .register_forms import UserRegisterForm
 from .car_forms import UserCarForm
 
+import qrcode
+import base64
+from io import BytesIO
 
 def home(request):
     """หน้าแรก - แสดงสถานะที่จอด"""
@@ -174,10 +178,26 @@ def view_ticket(request, booking_id):
         messages.error(request, '❌ ยังไม่มีตั๋ว')
         return redirect('my_bookings')
     
+    # 🔹 Data to encode in QR
+    qr_data = ticket.qr_code or f"TICKET:{ticket.ticket_number}|BOOKING:{booking.booking_id}"
+    
+    # 🔹 Generate QR image
+    qr = qrcode.QRCode(box_size=8, border=2)
+    qr.add_data(qr_data)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    
+    # 🔹 Convert to Base64 for <img src="">
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
+    
     return render(request, 'bookings/ticket.html', {
         'ticket': ticket,
-        'booking': booking
+        'booking': booking,
+        'qr_image': qr_base64,   # 👉 send to template
     })
+
 
 
 def register(request):

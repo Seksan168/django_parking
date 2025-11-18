@@ -8,6 +8,9 @@ from pathlib import Path
 import os
 
 import dj_database_url  # <- make sure this is installed: pip install dj-database-url
+from dotenv import load_dotenv
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,8 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY & DEBUG should come from environment variables in production
 # For local dev, you can keep default fallback values.
 SECRET_KEY = os.getenv(
-    "SECRET_KEY",
-    "dev-secret-key-change-me"  # fallback only for local development
+    'SECRET_KEY', # fallback only for local development
 )
 
 DEBUG = os.getenv("DEBUG", "True") == "True"
@@ -30,10 +32,15 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 CSRF_TRUSTED_ORIGINS = [
     # Add your real Heroku URL here when you know it
     # "https://your-app-name.herokuapp.com",
+    "https://*.railway.app",
 ]
 
 # Allow all hosts for now (simpler when testing). Later you can restrict.
-ALLOWED_HOSTS = ['.railway.app']
+production_host = os.getenv('PRODUCTION_HOST', '')
+ALLOWED_HOSTS = ['.railway.app', 'localhost', '127.0.0.1']
+if production_host:
+    ALLOWED_HOSTS.append(production_host)
+
 
 
 # ============================================================

@@ -14,7 +14,12 @@
     <div class="flex">
       <!-- Status Bar -->
       <div
-        class="w-2 {% if booking.status == 'APPROVED' %}bg-green-500{% elif booking.status == 'WAITING' %}bg-yellow-500{% elif booking.status == 'REJECTED' %}bg-red-500{% else %}bg-gray-500{% endif %}"
+        class="w-2 
+        {% if booking.status == 'APPROVED' %}bg-green-500
+        {% elif booking.status == 'WAITING' %}bg-yellow-500
+        {% elif booking.status == 'REJECTED' %}bg-red-500
+        {% else %}bg-gray-500
+        {% endif %}"
       ></div>
 
       <!-- Content -->
