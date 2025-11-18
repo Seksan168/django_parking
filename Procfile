@@ -1,1 +1,1 @@
-web: gunicorn config.wsgi --log-file -
+gunicorn parking_system.wsgi:application --bind 0.0.0.0:$PORT --workers 3
