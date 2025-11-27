@@ -18,6 +18,7 @@ pycparser==2.23
 pydyf==0.11.0
 pyphen==0.17.2
 python-dotenv==1.2.1
+qrcode==7.4.2
 sqlparse==0.5.3
 tinycss2==1.4.0
 tinyhtml5==2.0.0
