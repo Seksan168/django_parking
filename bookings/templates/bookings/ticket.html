@@ -15,22 +15,19 @@ ticket.ticket_number }}{% endblock %} {% block content %}
     </div>
 
     <!-- QR Code / Barcode Section -->
+    <!-- QR Code / Barcode Section -->
     <div
       class="bg-gray-50 p-8 text-center border-b-4 border-dashed border-gray-300"
     >
       <div class="bg-white p-6 rounded-lg inline-block shadow-md">
-        <!-- Simulated QR Code -->
-        <div
-          class="w-48 h-48 bg-gradient-to-br from-gray-800 to-gray-600 rounded-lg flex items-center justify-center text-white font-mono text-xs p-4"
-        >
-          <div class="text-center">
-            <div class="text-4xl mb-2">▪️▪️▪️</div>
-            <div class="text-4xl mb-2">▪️ ▪️▪️</div>
-            <div class="text-4xl mb-2">▪️▪️ ▪️</div>
-            <div class="text-xs">QR CODE</div>
-            <div class="text-xs mt-2">{{ ticket.qr_code }}</div>
-          </div>
-        </div>
+        <img
+          src="data:image/png;base64,{{ qr_image }}"
+          alt="QR Code"
+          class="w-48 h-48 mx-auto rounded-lg shadow"
+        />
+        <p class="text-xs text-gray-500 mt-2 font-mono break-all">
+          {{ ticket.qr_code }}
+        </p>
       </div>
       <p class="text-gray-600 mt-4 font-semibold">
         Scan QR Code to enter/exit the parking lot
